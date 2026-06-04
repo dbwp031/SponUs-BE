@@ -16,6 +16,8 @@ public enum ProposeErrorCode implements BaseErrorCode {
 	PROPOSE_LIMIT_ERROR(HttpStatus.CONFLICT, "PROP4009", "하루 제안 5회 초과하였습니다."),
 	PROFILE_NOT_COMPLETED(HttpStatus.BAD_REQUEST, "PROP4010", "프로필이 작성되지 않았습니다."),
 	CANNOT_PROPOSE_TO_SELF(HttpStatus.BAD_REQUEST, "PROP4011", "본인에게는 제안할 수 없습니다."),
+	ALREADY_APPLIED(HttpStatus.CONFLICT, "PROP4012", "이미 지원한 공고입니다."),
+	ONLY_CLUB_CAN_APPLY(HttpStatus.UNAUTHORIZED, "PROP4013", "공고 지원은 동아리 단체만 가능합니다."),
 	PROPOSE_NOT_FOUND(HttpStatus.NOT_FOUND, "PROP4040", "해당 제안이 존재하지 않습니다.");
 
 	private final HttpStatus httpStatus;

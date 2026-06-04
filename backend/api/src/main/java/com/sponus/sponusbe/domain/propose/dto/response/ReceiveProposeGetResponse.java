@@ -14,6 +14,8 @@ public record ReceiveProposeGetResponse(
 	Long target,
 	String organizationName,
 	String organizationImageUrl,
+	Long announcementId,
+	String announcementTitle,
 	ProposeStatus status,
 	LocalDate createdAt
 ) {
@@ -25,6 +27,8 @@ public record ReceiveProposeGetResponse(
 			.target(propose.getTarget().getId())
 			.organizationName(propose.getOrganization().getName())
 			.organizationImageUrl(propose.getOrganization().getImageUrl())
+			.announcementId(propose.getAnnouncement().getId())
+			.announcementTitle(propose.getAnnouncement().getTitle())
 			.status(propose.getStatus())
 			.createdAt(propose.getCreatedAt().toLocalDate())
 			.build();
