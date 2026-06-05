@@ -1,8 +1,8 @@
 package com.sponus.core.domain.propose.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,11 +25,28 @@ public interface ProposeRepository extends JpaRepository<Propose, Long> {
 	Long countProposesByOrganizationToday(@Param("organization") Organization organization,
 		@Param("startOfDay") LocalDateTime startOfDay);
 
-	Page<Propose> findByOrganizationOrderByCreatedAtDesc(Organization organization, Pageable pageable);
+	// N+1 방지를 위해 단일 @ManyToOne 연관은 Fetch Join 으로 함께 로딩한다.
+	@Query("""
+		SELECT p FROM Propose p
+		LEFT JOIN FETCH p.organization
+		LEFT JOIN FETCH p.target
+		LEFT JOIN FETCH p.announcement
+		WHERE p.organization = :organization
+		ORDER BY p.createdAt DESC
+		""")
+	List<Propose> findByOrganizationOrderByCreatedAtDesc(Organization organization, Pageable pageable);
 
 	Long countByOrganization(Organization organization);
 
-	Page<Propose> findByTargetOrderByCreatedAtDesc(Organization target, Pageable pageable);
+	@Query("""
+		SELECT p FROM Propose p
+		LEFT JOIN FETCH p.organization
+		LEFT JOIN FETCH p.target
+		LEFT JOIN FETCH p.announcement
+		WHERE p.target = :target
+		ORDER BY p.createdAt DESC
+		""")
+	List<Propose> findByTargetOrderByCreatedAtDesc(Organization target, Pageable pageable);
 
 	Long countByTarget(Organization target);
 }
