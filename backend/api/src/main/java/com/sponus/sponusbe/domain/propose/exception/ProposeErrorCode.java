@@ -18,6 +18,7 @@ public enum ProposeErrorCode implements BaseErrorCode {
 	CANNOT_PROPOSE_TO_SELF(HttpStatus.BAD_REQUEST, "PROP4011", "본인에게는 제안할 수 없습니다."),
 	ALREADY_APPLIED(HttpStatus.CONFLICT, "PROP4012", "이미 지원한 공고입니다."),
 	ONLY_CLUB_CAN_APPLY(HttpStatus.UNAUTHORIZED, "PROP4013", "공고 지원은 동아리 단체만 가능합니다."),
+	PROPOSE_REQUEST_IN_PROGRESS(HttpStatus.CONFLICT, "PROP4014", "동일한 제휴 요청이 처리 중입니다. 잠시 후 다시 시도해주세요."),
 	PROPOSE_NOT_FOUND(HttpStatus.NOT_FOUND, "PROP4040", "해당 제안이 존재하지 않습니다.");
 
 	private final HttpStatus httpStatus;

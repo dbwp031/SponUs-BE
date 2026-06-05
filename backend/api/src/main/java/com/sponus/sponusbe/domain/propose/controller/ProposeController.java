@@ -18,8 +18,8 @@ import com.sponus.sponusbe.domain.propose.dto.request.ProposeCreateRequest;
 import com.sponus.sponusbe.domain.propose.dto.response.ProposeCreateResponse;
 import com.sponus.sponusbe.domain.propose.dto.response.ReceiveProposeGetResponse;
 import com.sponus.sponusbe.domain.propose.dto.response.SendProposeGetResponse;
+import com.sponus.sponusbe.domain.propose.service.ProposeLockFacade;
 import com.sponus.sponusbe.domain.propose.service.ProposeQueryService;
-import com.sponus.sponusbe.domain.propose.service.ProposeService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class ProposeController {
 
-	private final ProposeService proposeService;
+	private final ProposeLockFacade proposeLockFacade;
 	private final ProposeQueryService proposequeryService;
 
 	@PostMapping()
@@ -39,7 +39,7 @@ public class ProposeController {
 		@AuthOrganization Organization authOrganization,
 		@RequestBody @Valid ProposeCreateRequest request
 	) {
-		return ApiResponse.onSuccess(proposeService.createPropose(authOrganization, request));
+		return ApiResponse.onSuccess(proposeLockFacade.createPropose(authOrganization, request));
 	}
 
 	@GetMapping("/send")
