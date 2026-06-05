@@ -26,8 +26,11 @@ public class CompanyController {
 	private final CompanyService companyService;
 
 	@GetMapping("/{companyId}")
-	public ApiResponse<CompanyGetResponse> getCompany(@PathVariable Long companyId) {
-		return ApiResponse.onSuccess(companyService.getCompany(companyId));
+	public ApiResponse<CompanyGetResponse> getCompany(
+		@AuthOrganization Organization authOrganization,
+		@PathVariable Long companyId
+	) {
+		return ApiResponse.onSuccess(companyService.getCompany(companyId, authOrganization));
 	}
 
 	@PatchMapping("/me")

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.sponus.core.domain.organization.Organization;
@@ -31,4 +32,8 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 
 	@Query("SELECT CASE WHEN COUNT(o) > 0 THEN true ELSE false END FROM Organization o WHERE o.email = :email")
 	Boolean checkDuplicateEmail(String email);
+
+	@Modifying
+	@Query("UPDATE Organization o SET o.viewCount = o.viewCount + :count WHERE o.id = :organizationId")
+	void increaseViewCount(Long organizationId, long count);
 }
