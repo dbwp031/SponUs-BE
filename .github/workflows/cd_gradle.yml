@@ -17,6 +17,9 @@ env:
 jobs:
   deploy-with-docker:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -80,8 +83,9 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 22
-          source: "./deploy/*"
+          source: "./backend/deploy/*"
           target: "~"
+          strip_components: 1
 
       # Deploy to Dev
       - name: Deploy to Dev
