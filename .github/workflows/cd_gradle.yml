@@ -1,11 +1,12 @@
 name: CD
 
 on:
-  workflow_dispatch:
-  push:
-    branches: [ "develop" ]
-    paths-ignore:
-      - '**/*.md'
+  workflow_dispatch:   # 수동 실행만 허용 (Actions 탭에서 Run workflow)
+  # 자동 배포 비활성화: develop push 시 CD 트리거를 끔. 다시 켜려면 아래 주석 해제.
+  # push:
+  #   branches: [ "develop" ]
+  #   paths-ignore:
+  #     - '**/*.md'
 
 permissions:
   contents: read
