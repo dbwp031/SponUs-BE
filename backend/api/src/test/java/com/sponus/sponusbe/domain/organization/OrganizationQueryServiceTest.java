@@ -11,9 +11,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sponus.coredomain.domain.organization.Organization;
-import com.sponus.coredomain.domain.organization.enums.OrganizationType;
-import com.sponus.coredomain.domain.organization.enums.ProfileStatus;
+import com.sponus.core.domain.organization.Organization;
+import com.sponus.core.domain.organization.enums.OrganizationType;
+import com.sponus.core.domain.organization.enums.ProfileStatus;
 import com.sponus.sponusbe.domain.organization.dto.request.PageCondition;
 import com.sponus.sponusbe.domain.organization.dto.response.OrganizationSearchResponse;
 import com.sponus.sponusbe.domain.organization.dto.response.PageResponse;

@@ -1,5 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/java,gradle
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,gradle
+.local
+
+# 로컬 전용 Claude Code 설정/스킬 (github 미반영)
+.claude/
 
 *-secret.yml
 **/src/main/generated/

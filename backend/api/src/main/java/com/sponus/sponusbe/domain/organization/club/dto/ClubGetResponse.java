@@ -2,7 +2,7 @@ package com.sponus.sponusbe.domain.organization.club.dto;
 
 import java.util.List;
 
-import com.sponus.coredomain.domain.organization.club.Club;
+import com.sponus.core.domain.organization.club.Club;
 import com.sponus.sponusbe.domain.organizationLink.dto.response.OrganizationLinkGetResponse;
 
 public record ClubGetResponse(

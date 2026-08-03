@@ -3,10 +3,10 @@ package com.sponus.sponusbe.domain.bookmark.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sponus.coredomain.domain.bookmark.Bookmark;
-import com.sponus.coredomain.domain.bookmark.repository.BookmarkRepository;
-import com.sponus.coredomain.domain.organization.Organization;
-import com.sponus.coredomain.domain.organization.repository.OrganizationRepository;
+import com.sponus.core.domain.bookmark.Bookmark;
+import com.sponus.core.domain.bookmark.repository.BookmarkRepository;
+import com.sponus.core.domain.organization.Organization;
+import com.sponus.core.domain.organization.repository.OrganizationRepository;
 import com.sponus.sponusbe.domain.bookmark.dto.request.BookmarkToggleRequest;
 import com.sponus.sponusbe.domain.bookmark.dto.response.BookmarkToggleResponse;
 import com.sponus.sponusbe.domain.bookmark.exception.BookmarkErrorCode;

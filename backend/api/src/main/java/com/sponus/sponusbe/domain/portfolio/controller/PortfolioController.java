@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.sponus.coredomain.domain.common.ApiResponse;
-import com.sponus.coredomain.domain.organization.Organization;
-import com.sponus.coredomain.domain.portfolio.repository.conditions.PortfolioSearchParam;
-import com.sponus.coreinfrasecurity.annotation.AuthOrganization;
+import com.sponus.core.domain.common.ApiResponse;
+import com.sponus.core.domain.organization.Organization;
+import com.sponus.core.domain.portfolio.repository.conditions.PortfolioSearchParam;
+import com.sponus.security.annotation.AuthOrganization;
 import com.sponus.sponusbe.domain.portfolio.dto.PortfolioCreateRequest;
 import com.sponus.sponusbe.domain.portfolio.dto.PortfolioCreateResponse;
 import com.sponus.sponusbe.domain.portfolio.dto.PortfolioGetResponse;

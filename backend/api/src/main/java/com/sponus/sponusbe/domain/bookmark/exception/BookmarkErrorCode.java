@@ -2,8 +2,8 @@ package com.sponus.sponusbe.domain.bookmark.exception;
 
 import org.springframework.http.HttpStatus;
 
-import com.sponus.coredomain.domain.common.ApiResponse;
-import com.sponus.coredomain.domain.common.BaseErrorCode;
+import com.sponus.core.domain.common.ApiResponse;
+import com.sponus.core.domain.common.BaseErrorCode;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

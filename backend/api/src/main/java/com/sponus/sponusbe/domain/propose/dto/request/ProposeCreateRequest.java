@@ -1,9 +1,9 @@
 package com.sponus.sponusbe.domain.propose.dto.request;
 
-import com.sponus.coredomain.domain.bookmark.Bookmark;
-import com.sponus.coredomain.domain.organization.Organization;
-import com.sponus.coredomain.domain.propose.Propose;
-import com.sponus.coredomain.domain.propose.ProposeStatus;
+import com.sponus.core.domain.bookmark.Bookmark;
+import com.sponus.core.domain.organization.Organization;
+import com.sponus.core.domain.propose.Propose;
+import com.sponus.core.domain.propose.ProposeStatus;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

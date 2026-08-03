@@ -11,10 +11,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.sponus.coredomain.domain.common.ApiResponse;
-import com.sponus.coredomain.domain.common.BaseErrorCode;
-import com.sponus.coredomain.domain.common.GlobalErrorCode;
-import com.sponus.coreinfrasecurity.jwt.exception.SecurityCustomException;
+import com.sponus.core.domain.common.ApiResponse;
+import com.sponus.core.domain.common.BaseErrorCode;
+import com.sponus.core.domain.common.GlobalErrorCode;
+import com.sponus.security.jwt.exception.SecurityCustomException;
 import com.sponus.sponusbe.domain.organization.exception.OrganizationErrorCode;
 
 import lombok.extern.slf4j.Slf4j;

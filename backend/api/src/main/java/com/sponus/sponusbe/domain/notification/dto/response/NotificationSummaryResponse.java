@@ -2,9 +2,9 @@ package com.sponus.sponusbe.domain.notification.dto.response;
 
 import java.time.LocalDateTime;
 
-import com.sponus.coredomain.domain.notification.Notification;
-import com.sponus.coredomain.domain.organization.Organization;
-import com.sponus.coredomain.domain.propose.Propose;
+import com.sponus.core.domain.notification.Notification;
+import com.sponus.core.domain.organization.Organization;
+import com.sponus.core.domain.propose.Propose;
 
 import lombok.Builder;
 

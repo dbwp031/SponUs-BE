@@ -2,7 +2,7 @@ package com.sponus.sponusbe.domain.organization.company.dto;
 
 import java.util.List;
 
-import com.sponus.coredomain.domain.organization.company.Company;
+import com.sponus.core.domain.organization.company.Company;
 
 public record CompanyGetResponse(
 	Long id,

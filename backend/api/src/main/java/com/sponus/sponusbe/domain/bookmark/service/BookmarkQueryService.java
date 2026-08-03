@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sponus.coredomain.domain.bookmark.Bookmark;
-import com.sponus.coredomain.domain.bookmark.repository.BookmarkRepository;
-import com.sponus.coredomain.domain.organization.Organization;
-import com.sponus.coredomain.domain.organization.enums.OrganizationType;
+import com.sponus.core.domain.bookmark.Bookmark;
+import com.sponus.core.domain.bookmark.repository.BookmarkRepository;
+import com.sponus.core.domain.organization.Organization;
+import com.sponus.core.domain.organization.enums.OrganizationType;
 import com.sponus.sponusbe.domain.bookmark.dto.response.BookmarkGetResponse;
 
 import lombok.RequiredArgsConstructor;

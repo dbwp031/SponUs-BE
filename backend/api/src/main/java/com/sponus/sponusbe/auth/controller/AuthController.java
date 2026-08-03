@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sponus.coredomain.domain.common.ApiResponse;
+import com.sponus.core.domain.common.ApiResponse;
 import com.sponus.sponusbe.auth.dto.EmailVerificationResponse;
 import com.sponus.sponusbe.auth.dto.ReissueResponse;
 import com.sponus.sponusbe.auth.dto.SendAuthenticationCodeResponse;

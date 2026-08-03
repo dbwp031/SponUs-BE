@@ -1,12 +1,11 @@
 dependencies {
 
-    implementation project(':core:core-domain');
-    implementation project(':core:core-infra-db');
-    implementation project(':core:core-infra-s3');
-    implementation project(':core:core-infra-redis');
-    implementation project(':core:core-infra-email');
-    implementation project(':core:core-infra-firebase');
-    implementation project(':core:core-infra-security');
+    implementation project(':core');
+    implementation project(':clients:s3');
+    implementation project(':storage:redis');
+    implementation project(':clients:mail');
+    implementation project(':clients:fcm');
+    implementation project(':security');
 
     // Core
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'

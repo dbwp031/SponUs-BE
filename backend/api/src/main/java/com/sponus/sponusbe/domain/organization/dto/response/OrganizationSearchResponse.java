@@ -1,7 +1,7 @@
 package com.sponus.sponusbe.domain.organization.dto.response;
 
-import com.sponus.coredomain.domain.organization.Organization;
-import com.sponus.coredomain.domain.organization.enums.OrganizationType;
+import com.sponus.core.domain.organization.Organization;
+import com.sponus.core.domain.organization.enums.OrganizationType;
 
 import lombok.Builder;
 

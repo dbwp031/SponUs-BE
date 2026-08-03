@@ -6,10 +6,10 @@ import static com.sponus.sponusbe.domain.organizationLink.exception.Organization
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sponus.coredomain.domain.organization.Organization;
-import com.sponus.coredomain.domain.organization.OrganizationLink;
-import com.sponus.coredomain.domain.organization.repository.OrganizationLinkRepository;
-import com.sponus.coredomain.domain.organization.repository.OrganizationRepository;
+import com.sponus.core.domain.organization.Organization;
+import com.sponus.core.domain.organization.OrganizationLink;
+import com.sponus.core.domain.organization.repository.OrganizationLinkRepository;
+import com.sponus.core.domain.organization.repository.OrganizationRepository;
 import com.sponus.sponusbe.domain.organization.exception.OrganizationException;
 import com.sponus.sponusbe.domain.organizationLink.dto.request.OrganizationLinkCreateRequest;
 import com.sponus.sponusbe.domain.organizationLink.dto.request.OrganizationLinkUpdateRequest;

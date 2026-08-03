@@ -1,6 +1,6 @@
 package com.sponus.sponusbe.domain.propose.dto.response;
 
-import com.sponus.coredomain.domain.propose.Propose;
+import com.sponus.core.domain.propose.Propose;
 
 import lombok.Builder;
 

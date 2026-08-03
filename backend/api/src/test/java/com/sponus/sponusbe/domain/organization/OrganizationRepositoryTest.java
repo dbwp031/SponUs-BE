@@ -7,10 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sponus.coredomain.domain.organization.Organization;
-import com.sponus.coredomain.domain.organization.enums.OrganizationType;
-import com.sponus.coredomain.domain.organization.enums.ProfileStatus;
-import com.sponus.coredomain.domain.organization.repository.OrganizationRepository;
+import com.sponus.core.domain.organization.Organization;
+import com.sponus.core.domain.organization.enums.OrganizationType;
+import com.sponus.core.domain.organization.enums.ProfileStatus;
+import com.sponus.core.domain.organization.repository.OrganizationRepository;
 
 @SpringBootTest
 @Transactional

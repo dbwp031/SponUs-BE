@@ -1,6 +1,6 @@
 package com.sponus.sponusbe.domain.propose.exception;
 
-import com.sponus.coredomain.domain.common.BaseErrorCode;
+import com.sponus.core.domain.common.BaseErrorCode;
 import com.sponus.sponusbe.global.exception.CustomException;
 
 public class ProposeException extends CustomException {

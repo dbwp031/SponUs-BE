@@ -1,6 +1,6 @@
 package com.sponus.sponusbe.domain.organization.dto.request;
 
-import com.sponus.coredomain.domain.organization.enums.OrganizationType;
+import com.sponus.core.domain.organization.enums.OrganizationType;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

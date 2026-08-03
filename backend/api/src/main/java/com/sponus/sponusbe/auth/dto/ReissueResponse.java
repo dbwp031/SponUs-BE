@@ -1,6 +1,6 @@
 package com.sponus.sponusbe.auth.dto;
 
-import com.sponus.coreinfrasecurity.jwt.dto.JwtPair;
+import com.sponus.security.jwt.dto.JwtPair;
 
 import lombok.Builder;
 

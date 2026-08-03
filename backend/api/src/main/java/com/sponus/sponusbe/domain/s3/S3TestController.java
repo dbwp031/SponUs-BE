@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.sponus.coredomain.domain.common.ApiResponse;
-import com.sponus.coreinfras3.S3Service;
+import com.sponus.core.domain.common.ApiResponse;
+import com.sponus.clients.s3.S3Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

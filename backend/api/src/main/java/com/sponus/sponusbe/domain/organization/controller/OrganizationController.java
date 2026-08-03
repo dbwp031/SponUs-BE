@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.sponus.coredomain.domain.common.ApiResponse;
-import com.sponus.coredomain.domain.organization.Organization;
-import com.sponus.coredomain.domain.organization.enums.OrganizationType;
-import com.sponus.coreinfrasecurity.annotation.AuthOrganization;
+import com.sponus.core.domain.common.ApiResponse;
+import com.sponus.core.domain.organization.Organization;
+import com.sponus.core.domain.organization.enums.OrganizationType;
+import com.sponus.security.annotation.AuthOrganization;
 import com.sponus.sponusbe.domain.notification.dto.response.NotificationSummaryResponse;
 import com.sponus.sponusbe.domain.organization.club.service.ClubService;
 import com.sponus.sponusbe.domain.organization.company.service.CompanyService;

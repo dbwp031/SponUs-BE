@@ -2,8 +2,8 @@ package com.sponus.sponusbe.domain.propose.dto.response;
 
 import java.time.LocalDate;
 
-import com.sponus.coredomain.domain.propose.Propose;
-import com.sponus.coredomain.domain.propose.ProposeStatus;
+import com.sponus.core.domain.propose.Propose;
+import com.sponus.core.domain.propose.ProposeStatus;
 
 import lombok.Builder;
 

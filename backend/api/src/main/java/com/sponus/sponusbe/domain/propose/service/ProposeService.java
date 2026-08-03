@@ -6,12 +6,12 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sponus.coredomain.domain.notification.NotificationStatus;
-import com.sponus.coredomain.domain.organization.Organization;
-import com.sponus.coredomain.domain.organization.repository.OrganizationRepository;
-import com.sponus.coredomain.domain.propose.Propose;
-import com.sponus.coredomain.domain.propose.repository.ProposeRepository;
-import com.sponus.coreinfrafirebase.FirebaseUtil;
+import com.sponus.core.domain.notification.NotificationStatus;
+import com.sponus.core.domain.organization.Organization;
+import com.sponus.core.domain.organization.repository.OrganizationRepository;
+import com.sponus.core.domain.propose.Propose;
+import com.sponus.core.domain.propose.repository.ProposeRepository;
+import com.sponus.clients.fcm.FirebaseUtil;
 import com.sponus.sponusbe.domain.organization.exception.OrganizationErrorCode;
 import com.sponus.sponusbe.domain.organization.exception.OrganizationException;
 import com.sponus.sponusbe.domain.propose.dto.request.ProposeCreateRequest;

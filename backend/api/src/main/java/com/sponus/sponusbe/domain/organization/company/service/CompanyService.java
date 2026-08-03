@@ -3,12 +3,12 @@ package com.sponus.sponusbe.domain.organization.company.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sponus.coredomain.domain.organization.company.CollaborationType;
-import com.sponus.coredomain.domain.organization.company.Company;
-import com.sponus.coredomain.domain.organization.company.CompanyType;
-import com.sponus.coredomain.domain.organization.repository.CollaborationRepository;
-import com.sponus.coredomain.domain.organization.repository.CompanyRepository;
-import com.sponus.coredomain.domain.organization.repository.CompanyTypeRepository;
+import com.sponus.core.domain.organization.company.CollaborationType;
+import com.sponus.core.domain.organization.company.Company;
+import com.sponus.core.domain.organization.company.CompanyType;
+import com.sponus.core.domain.organization.repository.CollaborationRepository;
+import com.sponus.core.domain.organization.repository.CompanyRepository;
+import com.sponus.core.domain.organization.repository.CompanyTypeRepository;
 import com.sponus.sponusbe.domain.organization.company.dto.CompanyGetResponse;
 import com.sponus.sponusbe.domain.organization.company.dto.CompanyUpdateRequest;
 import com.sponus.sponusbe.domain.organization.exception.CompanyErrorCode;

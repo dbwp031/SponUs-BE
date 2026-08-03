@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sponus.coredomain.domain.common.ApiResponse;
-import com.sponus.coredomain.domain.organization.Organization;
-import com.sponus.coreinfrasecurity.annotation.AuthOrganization;
+import com.sponus.core.domain.common.ApiResponse;
+import com.sponus.core.domain.organization.Organization;
+import com.sponus.security.annotation.AuthOrganization;
 import com.sponus.sponusbe.domain.organization.company.dto.CompanyGetResponse;
 import com.sponus.sponusbe.domain.organization.company.dto.CompanyUpdateRequest;
 import com.sponus.sponusbe.domain.organization.company.service.CompanyService;

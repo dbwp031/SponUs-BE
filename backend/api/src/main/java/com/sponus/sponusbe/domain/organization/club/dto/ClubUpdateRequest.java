@@ -2,8 +2,8 @@ package com.sponus.sponusbe.domain.organization.club.dto;
 
 import java.util.List;
 
-import com.sponus.coredomain.domain.organization.club.ClubTypeEnum;
-import com.sponus.coredomain.domain.organization.enums.ProfileStatus;
+import com.sponus.core.domain.organization.club.ClubTypeEnum;
+import com.sponus.core.domain.organization.enums.ProfileStatus;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

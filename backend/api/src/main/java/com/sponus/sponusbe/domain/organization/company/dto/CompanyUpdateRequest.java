@@ -2,9 +2,9 @@ package com.sponus.sponusbe.domain.organization.company.dto;
 
 import java.util.List;
 
-import com.sponus.coredomain.domain.organization.company.CollaborationTypeEnum;
-import com.sponus.coredomain.domain.organization.company.CompanyTypeEnum;
-import com.sponus.coredomain.domain.organization.enums.ProfileStatus;
+import com.sponus.core.domain.organization.company.CollaborationTypeEnum;
+import com.sponus.core.domain.organization.company.CompanyTypeEnum;
+import com.sponus.core.domain.organization.enums.ProfileStatus;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -7,9 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sponus.coredomain.domain.portfolio.Portfolio;
-import com.sponus.coredomain.domain.portfolio.repository.PortfolioRepository;
-import com.sponus.coredomain.domain.portfolio.repository.conditions.PortfolioSearchParam;
+import com.sponus.core.domain.portfolio.Portfolio;
+import com.sponus.core.domain.portfolio.repository.PortfolioRepository;
+import com.sponus.core.domain.portfolio.repository.conditions.PortfolioSearchParam;
 import com.sponus.sponusbe.domain.portfolio.dto.PortfolioGetResponse;
 import com.sponus.sponusbe.domain.portfolio.dto.PortfolioImageGetResponse;
 

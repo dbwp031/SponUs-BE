@@ -1,7 +1,7 @@
 package com.sponus.sponusbe.domain.bookmark.dto.request;
 
-import com.sponus.coredomain.domain.bookmark.Bookmark;
-import com.sponus.coredomain.domain.organization.Organization;
+import com.sponus.core.domain.bookmark.Bookmark;
+import com.sponus.core.domain.organization.Organization;
 
 import jakarta.validation.constraints.NotNull;
 

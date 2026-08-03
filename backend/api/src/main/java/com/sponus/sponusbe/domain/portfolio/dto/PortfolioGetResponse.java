@@ -3,7 +3,7 @@ package com.sponus.sponusbe.domain.portfolio.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.sponus.coredomain.domain.portfolio.Portfolio;
+import com.sponus.core.domain.portfolio.Portfolio;
 
 public record PortfolioGetResponse(
 	Long portfolioId,

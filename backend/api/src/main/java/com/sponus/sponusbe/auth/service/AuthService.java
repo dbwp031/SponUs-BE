@@ -2,9 +2,9 @@ package com.sponus.sponusbe.auth.service;
 
 import org.springframework.stereotype.Service;
 
-import com.sponus.coredomain.domain.organization.repository.OrganizationRepository;
-import com.sponus.coreinfraemail.EmailUtil;
-import com.sponus.coreinfrasecurity.jwt.util.JwtUtil;
+import com.sponus.core.domain.organization.repository.OrganizationRepository;
+import com.sponus.clients.mail.EmailUtil;
+import com.sponus.security.jwt.util.JwtUtil;
 import com.sponus.sponusbe.auth.dto.EmailVerificationResponse;
 import com.sponus.sponusbe.auth.dto.ReissueResponse;
 import com.sponus.sponusbe.auth.dto.SendAuthenticationCodeResponse;

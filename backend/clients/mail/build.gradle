@@ -1,0 +1,8 @@
+dependencies {
+    // email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation project(':storage:redis')
+}
+
+bootJar { enabled = false }
+jar { enabled = true }

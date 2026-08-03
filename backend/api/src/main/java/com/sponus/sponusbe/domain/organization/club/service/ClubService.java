@@ -3,10 +3,10 @@ package com.sponus.sponusbe.domain.organization.club.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sponus.coredomain.domain.organization.club.Club;
-import com.sponus.coredomain.domain.organization.club.ClubType;
-import com.sponus.coredomain.domain.organization.repository.ClubRepository;
-import com.sponus.coredomain.domain.organization.repository.ClubTypeRepository;
+import com.sponus.core.domain.organization.club.Club;
+import com.sponus.core.domain.organization.club.ClubType;
+import com.sponus.core.domain.organization.repository.ClubRepository;
+import com.sponus.core.domain.organization.repository.ClubTypeRepository;
 import com.sponus.sponusbe.domain.organization.club.dto.ClubGetResponse;
 import com.sponus.sponusbe.domain.organization.club.dto.ClubUpdateRequest;
 import com.sponus.sponusbe.domain.organization.exception.ClubErrorCode;

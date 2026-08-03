@@ -52,8 +52,8 @@ jobs:
         env:
           DATA: ${{ secrets.FIREBASE_KEY }}
         run: |
-          mkdir -p ./core/core-infra-firebase/src/main/resources/firebase
-          echo $DATA > ./core/core-infra-firebase/src/main/resources/firebase/firebase-key.json
+          mkdir -p ./clients/fcm/src/main/resources/firebase
+          echo $DATA > ./clients/fcm/src/main/resources/firebase/firebase-key.json
 
       # Grant execute permission for gradlew
       - name: Grant execute permission for gradlew

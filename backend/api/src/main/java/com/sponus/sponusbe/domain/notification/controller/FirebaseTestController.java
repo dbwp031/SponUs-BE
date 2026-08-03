@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sponus.coredomain.domain.notification.NotificationStatus;
-import com.sponus.coredomain.domain.organization.Organization;
-import com.sponus.coreinfrafirebase.FirebaseUtil;
-import com.sponus.coreinfrasecurity.annotation.AuthOrganization;
+import com.sponus.core.domain.notification.NotificationStatus;
+import com.sponus.core.domain.organization.Organization;
+import com.sponus.clients.fcm.FirebaseUtil;
+import com.sponus.security.annotation.AuthOrganization;
 import com.sponus.sponusbe.domain.notification.dto.request.NotificationTestRequest;
 
 import lombok.RequiredArgsConstructor;
