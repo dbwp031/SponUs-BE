@@ -8,7 +8,8 @@ import lombok.Builder;
 public record ProposeCreateResponse(
 	Long id,
 	Long organizationId,
-	Long target
+	Long target,
+	Long announcementId
 ) {
 
 	public static ProposeCreateResponse from(Propose propose) {
@@ -16,6 +17,7 @@ public record ProposeCreateResponse(
 			.id(propose.getId())
 			.organizationId(propose.getOrganization().getId())
 			.target(propose.getTarget().getId())
+			.announcementId(propose.getAnnouncement().getId())
 			.build();
 	}
 }

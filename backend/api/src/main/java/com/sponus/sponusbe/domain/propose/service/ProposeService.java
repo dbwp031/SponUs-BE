@@ -6,14 +6,16 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sponus.clients.fcm.FirebaseUtil;
+import com.sponus.core.domain.announcement.Announcement;
+import com.sponus.core.domain.announcement.repository.AnnouncementRepository;
 import com.sponus.core.domain.notification.NotificationStatus;
 import com.sponus.core.domain.organization.Organization;
-import com.sponus.core.domain.organization.repository.OrganizationRepository;
+import com.sponus.core.domain.organization.company.Company;
 import com.sponus.core.domain.propose.Propose;
 import com.sponus.core.domain.propose.repository.ProposeRepository;
-import com.sponus.clients.fcm.FirebaseUtil;
-import com.sponus.sponusbe.domain.organization.exception.OrganizationErrorCode;
-import com.sponus.sponusbe.domain.organization.exception.OrganizationException;
+import com.sponus.sponusbe.domain.announcement.exception.AnnouncementErrorCode;
+import com.sponus.sponusbe.domain.announcement.exception.AnnouncementException;
 import com.sponus.sponusbe.domain.propose.dto.request.ProposeCreateRequest;
 import com.sponus.sponusbe.domain.propose.dto.response.ProposeCreateResponse;
 import com.sponus.sponusbe.domain.propose.exception.ProposeErrorCode;
@@ -28,44 +30,52 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ProposeService {
 
+	private static final int DAILY_APPLY_LIMIT = 5;
+
 	private final ProposeRepository proposeRepository;
-	private final OrganizationRepository organizationRepository;
+	private final AnnouncementRepository announcementRepository;
 	private final FirebaseUtil firebaseUtil;
 
-	public ProposeCreateResponse createPropose(Organization organization, ProposeCreateRequest request) {
+	// 동아리가 기업의 제휴 공고글에 지원한다.
+	public ProposeCreateResponse createPropose(Organization applicant, ProposeCreateRequest request) {
 
-		if (organization.getId().equals(request.target()))
+		if (!applicant.isClub())
+			throw new ProposeException(ProposeErrorCode.ONLY_CLUB_CAN_APPLY);
+
+		final Announcement announcement = announcementRepository.findById(request.announcementId())
+			.orElseThrow(() -> new AnnouncementException(AnnouncementErrorCode.ANNOUNCEMENT_NOT_FOUND));
+
+		if (!announcement.isRecruiting())
+			throw new AnnouncementException(AnnouncementErrorCode.ANNOUNCEMENT_NOT_RECRUITING);
+
+		final Company target = announcement.getCompany();
+
+		if (applicant.getId().equals(target.getId()))
 			throw new ProposeException(ProposeErrorCode.CANNOT_PROPOSE_TO_SELF);
 
-		final Organization target = organizationRepository.findById(request.target())
-			.orElseThrow(() -> new OrganizationException(OrganizationErrorCode.ORGANIZATION_NOT_FOUND));
-
-		if (organization.getImageUrl() == null || organization.getImageUrl().isEmpty())
+		if (applicant.getImageUrl() == null || applicant.getImageUrl().isEmpty())
 			throw new ProposeException(ProposeErrorCode.PROFILE_NOT_COMPLETED);
 
-		final Long count = proposeRepository.countProposesByOrganizationToday(organization,
+		if (Boolean.TRUE.equals(proposeRepository.existsByOrganizationAndAnnouncement(applicant, announcement)))
+			throw new ProposeException(ProposeErrorCode.ALREADY_APPLIED);
+
+		final Long count = proposeRepository.countProposesByOrganizationToday(applicant,
 			LocalDateTime.now().toLocalDate().atStartOfDay());
 
-		if (count >= 5)
+		if (count >= DAILY_APPLY_LIMIT)
 			throw new ProposeException(ProposeErrorCode.PROPOSE_LIMIT_ERROR);
 
-		// TODO 쿼리와 비교
-		// long count = proposeRepository.findByOrganization(organization)
-		// 	.stream()
-		// 	.filter(propose -> propose.getCreatedAt().isAfter(LocalDateTime.now().toLocalDate().atStartOfDay()))
-		// 	.count();
-
-		final Propose propose = proposeRepository.save(request.toEntity(organization, target));
+		final Propose propose = proposeRepository.save(request.toEntity(applicant, announcement));
 		try {
 			firebaseUtil.sendMessageTo(
 				target,
-				organization.getName() + "(으)로부터 제안이 왔어요!",
-				"이메일을 확인하고 기업과 컨택해 보세요.",
+				applicant.getName() + "(으)로부터 공고 지원이 왔어요!",
+				"「" + announcement.getTitle() + "」 공고를 확인해 보세요.",
 				propose,
 				NotificationStatus.RECEIVE
 			);
 		} catch (IOException ex) {
-			log.error("[*] Failed to send notification to organization: " + target.getName(), ex);
+			log.error("[*] Failed to send notification to company: " + target.getName(), ex);
 		}
 		return ProposeCreateResponse.from(propose);
 	}

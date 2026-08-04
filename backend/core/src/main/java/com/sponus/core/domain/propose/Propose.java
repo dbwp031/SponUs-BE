@@ -4,6 +4,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.sponus.core.domain.announcement.Announcement;
 import com.sponus.core.domain.common.BaseEntity;
 import com.sponus.core.domain.organization.Organization;
 
@@ -49,6 +50,11 @@ public class Propose extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "target_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
 	private Organization target;
+
+	// 지원 대상 제휴 공고글 (기업 소유). target 은 announcement.getCompany() 로 유도된다.
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "announcement_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+	private Announcement announcement;
 
 	@Enumerated(EnumType.STRING)
 	@ColumnDefault("'WAITING'")

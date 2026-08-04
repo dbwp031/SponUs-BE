@@ -8,12 +8,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.sponus.core.domain.announcement.Announcement;
 import com.sponus.core.domain.organization.Organization;
 import com.sponus.core.domain.propose.Propose;
 
 public interface ProposeRepository extends JpaRepository<Propose, Long> {
 
 	Boolean existsByOrganization(Organization organization);
+
+	// 동일 공고에 이미 지원했는지 확인 (중복 지원 방지)
+	Boolean existsByOrganizationAndAnnouncement(Organization organization, Announcement announcement);
 
 	// Optional<Propose> findByOrganization(Organization organization);
 
