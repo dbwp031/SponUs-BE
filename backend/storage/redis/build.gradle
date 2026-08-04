@@ -1,5 +1,9 @@
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // 분산락 (Redisson) + AOP
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.redisson:redisson:3.27.2'
 }
 
 bootJar { enabled = false }

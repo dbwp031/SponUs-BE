@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.sponus.clients.fcm.FirebaseUtil;
 import com.sponus.core.domain.announcement.Announcement;
@@ -14,6 +13,7 @@ import com.sponus.core.domain.organization.Organization;
 import com.sponus.core.domain.organization.company.Company;
 import com.sponus.core.domain.propose.Propose;
 import com.sponus.core.domain.propose.repository.ProposeRepository;
+import com.sponus.storage.redis.lock.DistributedLock;
 import com.sponus.sponusbe.domain.announcement.exception.AnnouncementErrorCode;
 import com.sponus.sponusbe.domain.announcement.exception.AnnouncementException;
 import com.sponus.sponusbe.domain.propose.dto.request.ProposeCreateRequest;
@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
 @Service
 public class ProposeService {
 
@@ -36,7 +35,15 @@ public class ProposeService {
 	private final AnnouncementRepository announcementRepository;
 	private final FirebaseUtil firebaseUtil;
 
-	// 동아리가 기업의 제휴 공고글에 지원한다.
+	/**
+	 * 동아리가 기업의 제휴 공고글에 지원한다.
+	 *
+	 * <p>"따닥"(연속 클릭) 동시성 문제 방지: 지원자(동아리) ID 와 공고 ID 를 조합한 멱등 키로
+	 * Redisson 분산락을 걸어 동일 요청을 직렬화한다. 공고는 소유 기업(대상)을 유일하게 결정하므로
+	 * (동아리 ID + 공고 ID)만으로 (동아리 ID + 기업 ID + 공고 ID) 조합과 동일한 멱등성을 갖는다.
+	 * 락 획득 후 기존 지원 존재 여부를 확인하여 없을 때만 생성한다.
+	 */
+	@DistributedLock(key = "'PROPOSE:' + #applicant.id + ':' + #request.announcementId()")
 	public ProposeCreateResponse createPropose(Organization applicant, ProposeCreateRequest request) {
 
 		if (!applicant.isClub())
