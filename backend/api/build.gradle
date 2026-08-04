@@ -10,6 +10,8 @@ dependencies {
     // Core
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    // 공고 상세 캐시(Cache Aside)/재생성 락에서 RedisTemplate 직접 사용
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'

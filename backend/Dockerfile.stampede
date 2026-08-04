@@ -1,0 +1,18 @@
+# cache stampede 실험 전용 이미지. 로컬 빌드 JDK(21)에 맞춘 베이스.
+# (프로덕션 Dockerfile 은 Java 17 기준 그대로 유지)
+FROM eclipse-temurin:21-jdk AS builder
+WORKDIR application
+ARG JAR_FILE=./api/build/libs/*.jar
+COPY ${JAR_FILE} application.jar
+RUN java -Djarmode=layertools -jar application.jar extract
+
+FROM eclipse-temurin:21-jre
+WORKDIR application
+COPY --from=builder application/dependencies/ ./
+COPY --from=builder application/spring-boot-loader/ ./
+COPY --from=builder application/snapshot-dependencies/ ./
+COPY --from=builder application/application/ ./
+
+ENV TZ=Asia/Seoul
+# 프로파일/DB/redis/stampede 설정은 compose 의 command(--x) 로 주입
+ENTRYPOINT ["java", "-Duser.timezone=Asia/Seoul", "org.springframework.boot.loader.launch.JarLauncher"]
