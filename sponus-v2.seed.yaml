@@ -1,0 +1,283 @@
+goal: >-
+  Rebuild the Spon-Us backend v2 as an AWS-deployable, multi-instance modular
+  monolith that lets university clubs discover sponsor companies and lets
+  companies and clubs initiate, agree, fulfill, complete, and audit physical-goods
+  sponsorships from a single service.
+task_type: code
+
+brownfield_context:
+  project_type: brownfield
+  context_references:
+    - path: /Users/yjlee/Workspace/projects/SponUs-BE
+      role: primary
+      summary: >-
+        Existing Java 17, Spring Boot 3.2, Gradle multi-project backend. The v1
+        implementation is preserved on main and tag v1.0.0 as historical reference;
+        v2 is rebuilt from the confirmed strategic DDD boundaries on
+        feature/v2-bootstrap.
+  existing_patterns:
+    - Gradle multi-project build with api, core, security, clients, and storage modules
+    - Spring MVC controllers with application services and Spring Data persistence
+    - Docker-based runtime and AWS-oriented adapters for mail, object storage, and notifications
+    - Existing v1 domain packages are reference material, not required v2 boundaries
+  existing_dependencies:
+    - Java 17
+    - Spring Boot 3.2.0
+    - Spring MVC and Bean Validation
+    - Spring Data JPA and QueryDSL
+    - Spring Security 6 and JWT
+    - MySQL-compatible relational persistence
+    - Redis and Redisson are available but must be used only when justified
+    - AWS S3 client, mail client, FCM client, Docker, and Gradle
+
+constraints:
+  - >-
+    Preserve v1 on main and tag v1.0.0; implement v2 only on the v2 development
+    branch without rewriting historical v1 commits or treating v1 domain boundaries
+    as authoritative.
+  - >-
+    Keep Java 17, Spring Boot 3, Gradle, and Spring MVC as the application baseline;
+    organize business code as a modular monolith around Identity, Organization,
+    Sponsorship Discovery, Sponsorship Initiation, Sponsorship Management,
+    Notification, Asset, and Platform Operations boundaries.
+  - >-
+    Sponsorship Management is the core domain. Contexts must not share mutable domain
+    entities; integrations use IDs, immutable snapshots, explicit application
+    contracts, and committed domain events.
+  - >-
+    Run correctly with two or more stateless application instances: no session or
+    correctness-critical state may live only in process memory, duplicate commands
+    must be idempotent, and concurrent state transitions must not violate domain
+    invariants.
+  - >-
+    Application submission plus announcement snapshot, negotiation start plus
+    SponsorshipCase creation, and agreement approval plus sponsorship confirmation
+    must each succeed or fail atomically. Notifications and role read models are
+    updated after commit through a durable Outbox and idempotent consumers.
+  - >-
+    Support physical-goods sponsorship only. Exclude money, settlement, refund, tax,
+    venue, labor, service, voucher, inventory allocation, and automatic announcement
+    closing.
+  - >-
+    Collect no participant-identifying data. Participant information is limited to
+    anonymized aggregate statistics such as counts, distributions, survey summaries,
+    reach, impressions, and booth visits.
+  - >-
+    Use one email-verified Account and one Organization per user in v2. Club and
+    company onboarding experiences are separate while authentication remains shared;
+    organization verification and trust badges are excluded.
+  - >-
+    Do not implement in-app chat, negotiation history, legal e-signature, payment,
+    dispute arbitration, multi-organization membership, multiple administrators,
+    recommendation ranking, or microservices in this Seed.
+  - >-
+    Finalized applications and proposals are immutable. Approved agreement versions
+    are immutable, historical organization names and snapshots are retained, and all
+    privileged platform-operator reads and actions are audited.
+  - >-
+    The application must remain container-deployable on AWS, but provisioning a
+    specific AWS topology is outside this Seed; infrastructure adapters must remain
+    replaceable and no business rule may depend on a single instance.
+
+acceptance_criteria:
+  - >-
+    After email verification, a user can create exactly one club or company
+    organization, maintain the role-appropriate public profile, optionally publish a
+    verified contact email, and access only actions allowed to that organization type;
+    authorization tests prove that a company cannot submit an application and a club
+    cannot send a proposal.
+  - >-
+    A company can draft, publish, edit, close, and reopen a multi-item sponsorship
+    announcement with multi-select non-blocking preferences; a club sees each company
+    with at least one recruiting announcement exactly once in the supportable-company
+    list, can filter it using the confirmed search fields, and an announcement edit
+    preserves submitted snapshots while notifying active applicants.
+  - >-
+    A club can draft and finally submit one active SponsorshipApplication per
+    announcement, and a company can draft and send one or more SponsorshipProposals to
+    a club; final submissions are immutable, withdrawal/rejection/reapplication rules
+    match the specification, and only the recipient can reject or start negotiation.
+  - >-
+    Starting negotiation from an application or proposal creates exactly one
+    SponsorshipCase with origin type, origin ID, party IDs, required private contact
+    emails, submitted-content snapshot, and historical party names; duplicate or
+    concurrent start commands return the same business result without creating a
+    second case.
+  - >-
+    Within a SponsorshipCase, the company can submit versioned SponsorshipAgreements
+    containing goods, quantities, club obligations, and required dates, while the club
+    can approve or reject; pre-approval replacements preserve history, approval makes
+    the version immutable and confirms the sponsorship, and a rejected replacement
+    never invalidates the previously approved version.
+  - >-
+    Both parties can see and perform only their next valid sponsorship actions through
+    shipment, receipt, obligation fulfillment, evidence submission, supplementation,
+    company completion, pre-confirmation withdrawal, and post-confirmation mutual
+    termination; the company dashboard and club My Sponsorship view show current state,
+    pending action, and complete immutable history without introducing a conflicting
+    source of truth.
+  - >-
+    Platform operators can search and inspect audited records, hide or restore policy-
+    violating announcements, and suspend or restore organization activity without
+    editing user-authored business records or deciding disputes; automated multi-
+    instance tests demonstrate atomic invariants, durable Outbox recovery after worker
+    restart, and no duplicate notification or read-model effect.
+
+ontology_schema:
+  name: SponUsV2Domain
+  description: >-
+    The strategic DDD ontology for Spon-Us v2, preserving the discovery-to-initiation-
+    to-management boundary, immutable historical evidence, role-specific actions, and
+    reliable multi-instance integration.
+  fields:
+    - name: accounts
+      type: array
+      description: Email-verified login identities and their authentication state
+    - name: organizations
+      type: array
+      description: Club and company business actors, public profiles, roles, and activity state
+    - name: announcements
+      type: array
+      description: Company-authored sponsorship announcements, items, preferences, and recruitment state
+    - name: applications
+      type: array
+      description: Club-authored announcement applications with drafts, immutable submissions, snapshots, and decisions
+    - name: proposals
+      type: array
+      description: Company-authored proposals to clubs with drafts, immutable submissions, and decisions
+    - name: sponsorship_cases
+      type: array
+      description: Core sponsorship work units created at negotiation start with parties, origin, state, and audit history
+    - name: agreements
+      type: array
+      description: Versioned sponsorship agreement documents, approval decisions, active version, and historical versions
+    - name: fulfillment_records
+      type: array
+      description: Shipment, receipt, club obligation, evidence, supplementation, and completion facts
+    - name: termination_requests
+      type: array
+      description: Post-confirmation mutual termination requests, responses, reasons, and timestamps
+    - name: notifications
+      type: array
+      description: Idempotently delivered user notifications derived from committed domain events
+    - name: assets
+      type: array
+      description: Stored file identities and access metadata while domain contexts retain business meaning
+    - name: operations_actions
+      type: array
+      description: Audited platform-operator reads, announcement visibility actions, and organization restrictions
+    - name: role_read_models
+      type: object
+      description: Supportable-company list, company management dashboard, and club My Sponsorship projections
+    - name: domain_events
+      type: array
+      description: Durable events and Outbox delivery state used for notifications and projections
+    - name: context_map
+      type: object
+      description: Ownership and integration contracts among all bounded contexts
+
+evaluation_principles:
+  - name: domain_correctness
+    description: Confirmed sponsorship language, actor permissions, state transitions, and immutable-history rules are implemented without contradiction
+    weight: 1.0
+  - name: bounded_context_integrity
+    description: Each model has one owning context and cross-context integration uses explicit contracts rather than shared mutable entities
+    weight: 0.95
+  - name: multi_instance_reliability
+    description: Atomic commands, idempotency, concurrency control, Outbox durability, and consumer deduplication hold with multiple instances
+    weight: 0.95
+  - name: user_workflow_clarity
+    description: Clubs and companies can find their next action and understand sponsorship state from role-specific views
+    weight: 0.9
+  - name: privacy_and_auditability
+    description: Participant privacy, historical snapshots, approval records, and operator audit trails are preserved
+    weight: 0.9
+  - name: maintainability
+    description: Code, tests, API contracts, and module dependencies make the strategic boundaries enforceable and understandable
+    weight: 0.85
+
+exit_conditions:
+  - name: all_outcomes_verified
+    description: Every acceptance criterion has reproducible automated or API-level evidence
+    criteria: 100% of the seven acceptance criteria are satisfied with no skipped mandatory assertion
+  - name: tests_green
+    description: Required unit, integration, architecture, concurrency, and Outbox recovery tests pass
+    criteria: ./backend/gradlew test exits with status 0 and all required multi-instance test scenarios pass
+  - name: boundaries_enforced
+    description: Bounded-context ownership and dependency direction are mechanically verified
+    criteria: Architecture tests report no forbidden cross-context entity or repository dependency
+  - name: no_critical_regressions
+    description: The delivered backend contains no unresolved correctness, security, privacy, or data-loss blocker
+    criteria: Final review reports zero unresolved critical or high-severity findings in the implemented scope
+  - name: executable_handoff_complete
+    description: A developer can run, test, and deploy the v2 backend from repository documentation
+    criteria: Clean-checkout build, local startup, migration, test, and container instructions are documented and verified
+
+strategic_design:
+  core_domain: Sponsorship Management
+  bounded_contexts:
+    Identity: Email verification, authentication, and Account identity
+    Organization: Club and company organizations, profiles, roles, and activity state
+    Sponsorship Discovery: Announcements, search, and the computed supportable-company list
+    Sponsorship Initiation: SponsorshipApplication, SponsorshipProposal, and negotiation start
+    Sponsorship Management: SponsorshipCase, SponsorshipAgreement, fulfillment, completion, and termination
+    Notification: User notifications derived from domain events
+    Asset: File storage identity and access while business meaning stays in the owning domain
+    Platform Operations: Audited safety actions without business-data editing or dispute decisions
+  ubiquitous_language:
+    - SponsorshipAnnouncement: A company post through which clubs may apply
+    - SupportableCompany: A company with at least one recruiting announcement
+    - SponsorshipApplication: A club submission to one announcement
+    - SponsorshipProposal: A company proposal to one club
+    - NegotiationStart: The recipient's non-binding decision to begin external discussion
+    - SponsorshipCase: The managed unit from negotiation start through completion or termination
+    - SponsorshipAgreement: The company-authored, club-approved internal record of final terms
+    - FulfillmentResult: The club's submitted result for agreed obligations
+    - Evidence: Material supporting a FulfillmentResult
+    - TerminationRequest: A request to end a confirmed sponsorship by mutual consent
+  primary_flow:
+    - Company publishes SponsorshipAnnouncement and club submits SponsorshipApplication
+    - Company sends SponsorshipProposal to a selected club without an announcement
+    - Recipient starts negotiation and exactly one SponsorshipCase is created
+    - Parties negotiate externally and company submits SponsorshipAgreement
+    - Club approves the agreement and sponsorship becomes confirmed
+    - Company ships goods, club confirms receipt and performs obligations
+    - Club submits results and evidence; company requests supplementation or completes the case
+  domain_events:
+    - AnnouncementPublished
+    - AnnouncementUpdated
+    - AnnouncementClosed
+    - AnnouncementReopened
+    - ApplicationSubmitted
+    - ApplicationWithdrawn
+    - ApplicationRejected
+    - ProposalSent
+    - ProposalWithdrawn
+    - ProposalRejected
+    - NegotiationStarted
+    - SponsorshipCaseCreated
+    - AgreementSubmitted
+    - PendingAgreementReplaced
+    - AgreementRejected
+    - AgreementApproved
+    - SponsorshipConfirmed
+    - GoodsShipped
+    - GoodsReceiptConfirmed
+    - FulfillmentSubmitted
+    - SupplementationRequested
+    - SponsorshipCompleted
+    - TerminationRequested
+    - TerminationRejected
+    - SponsorshipTerminatedByMutualConsent
+
+metadata:
+  seed_id: seed_sponus_v2_20260830
+  version: 1.0.0
+  created_at: 2026-08-29T19:33:15Z
+  ambiguity_score: 0.12
+  interview_id: null
+  parent_seed_id: null
+  generation_mode: normal
+  degraded: false
+  unresolved_slots: []
+  recovery_reason: null
