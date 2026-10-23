@@ -24,7 +24,7 @@ public class AnnouncementCacheProperties {
 	// 재생성 락 lease(ms). DB조회 p99 + 변환 + 캐시저장 + 여유보다 길어야 함.
 	private long lockLeaseMs = 3000;
 
-	// 락 미획득 시 캐시 채워짐을 기다리는 총 예산(ms). 초과 시 DB fallback.
+	// 즉시 획득 실패 시 Redisson Pub/Sub 기반 락 대기 시간(ms). 초과 시 캐시 재확인 후 DB fallback.
 	private long waitBudgetMs = 300;
 
 	// 커밋 이후 delayed double delete 의 2차 삭제 지연(ms).

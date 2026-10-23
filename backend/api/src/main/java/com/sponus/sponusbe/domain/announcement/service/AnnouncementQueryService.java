@@ -7,9 +7,9 @@ import static com.sponus.sponusbe.domain.organization.exception.OrganizationErro
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.redisson.client.RedisException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,8 +41,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class AnnouncementQueryService {
 
-	private static final long[] WAIT_BACKOFF_MS = {20, 50, 100};
-
 	private final AnnouncementRepository announcementRepository;
 	private final CompanyRepository companyRepository;
 
@@ -66,7 +64,8 @@ public class AnnouncementQueryService {
 	/**
 	 * 공고 상세 — 수동 Cache Aside.
 	 * hit 반환 → miss 시 공고별 재생성 락 획득 → double-check → DB 조회/캐시 저장 → 락 해제.
-	 * 락 미획득 시 짧게 캐시가 채워지길 기다린 뒤 없으면 DB fallback. Redis 장애 시 즉시 DB fallback.
+	 * 경합 시 Redisson Pub/Sub으로 락을 기다린다. 대기 초과 시 캐시 재확인 후 DB fallback.
+	 * Redis 장애 시 DB fallback.
 	 *
 	 * <p>재생성 락 대기 동안 DB 커넥션을 잡지 않도록 트랜잭션을 열지 않는다(SUPPORTS).
 	 */
@@ -92,12 +91,20 @@ public class AnnouncementQueryService {
 		}
 
 		// 2) 공고별 재생성 락 획득 시도
-		String ownerToken = UUID.randomUUID().toString();
 		boolean acquired;
 		try {
-			acquired = cacheLock.tryLock(announcementId, ownerToken, Duration.ofMillis(props.getLockLeaseMs()));
-		} catch (DataAccessException e) {
+			Duration lease = Duration.ofMillis(props.getLockLeaseMs());
+			acquired = cacheLock.tryLock(announcementId, Duration.ZERO, lease);
+			if (!acquired) {
+				metrics.recordLockWait();
+				acquired = cacheLock.tryLock(announcementId, Duration.ofMillis(props.getWaitBudgetMs()), lease);
+			}
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			return loadFromDb(announcementId);
+		} catch (RedisException e) {
 			metrics.recordRedisFailure();
+			log.warn("[Cache] Redisson 락 획득 실패 → DB fallback id={}", announcementId, e);
 			return loadFromDb(announcementId);
 		}
 
@@ -114,17 +121,20 @@ public class AnnouncementQueryService {
 				metrics.recordRedisFailure();
 				return loadFromDb(announcementId);
 			} finally {
-				cacheLock.unlock(announcementId, ownerToken);
+				cacheLock.unlock(announcementId);
 			}
 		}
 
-		// 4) 락 미획득 → 캐시가 채워지길 짧게 대기 → 없으면 DB fallback
-		metrics.recordLockWait();
-		Optional<AnnouncementGetResponse> populated = waitForCache(announcementId);
-		if (populated.isPresent()) {
-			return populated.get();
-		}
+		// 4) 락 대기 초과 → 마지막 캐시 확인 → 없으면 DB fallback
 		metrics.recordLockTimeout();
+		try {
+			Optional<AnnouncementGetResponse> populated = cacheStore.get(announcementId);
+			if (populated.isPresent()) {
+				return populated.get();
+			}
+		} catch (DataAccessException e) {
+			metrics.recordRedisFailure();
+		}
 		return loadFromDb(announcementId);
 	}
 
@@ -163,33 +173,6 @@ public class AnnouncementQueryService {
 		return announcementRepository.findWithCompanyById(announcementId)
 			.map(AnnouncementGetResponse::from)
 			.orElseThrow(() -> new AnnouncementException(ANNOUNCEMENT_NOT_FOUND));
-	}
-
-	// 락 미획득 요청: 락을 다시 잡지 않고 캐시가 채워졌는지만 짧고 제한된 시간 동안 확인
-	private Optional<AnnouncementGetResponse> waitForCache(Long announcementId) {
-		long budgetNs = props.getWaitBudgetMs() * 1_000_000L;
-		long start = System.nanoTime();
-		int step = 0;
-		while (System.nanoTime() - start < budgetNs) {
-			long base = WAIT_BACKOFF_MS[Math.min(step, WAIT_BACKOFF_MS.length - 1)];
-			try {
-				Thread.sleep(base + ThreadLocalRandom.current().nextLong(10));
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-				return Optional.empty();
-			}
-			step++;
-			try {
-				Optional<AnnouncementGetResponse> cached = cacheStore.get(announcementId);
-				if (cached.isPresent()) {
-					return cached;
-				}
-			} catch (DataAccessException e) {
-				metrics.recordRedisFailure();
-				return Optional.empty();   // Redis 장애 → 호출자가 DB fallback
-			}
-		}
-		return Optional.empty();
 	}
 
 	// TTL = 기본값 + 0~jitter(초) 무작위 → 동시 만료 분산
