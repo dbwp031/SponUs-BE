@@ -21,9 +21,5 @@ public class SchedulerConfig {
 		organizationViewSyncService.syncViewCounts();
 	}
 
-	// 매일 0시에 중복 조회 dedup Set 을 초기화한다.
-	@Scheduled(cron = "0 0 0 * * *")
-	public void resetOrganizationViewers() {
-		organizationViewSyncService.clearViewers();
-	}
+	// 조회자 Set은 자정 TTL로 만료된다. 전체 삭제는 자정 이후 새 조회 기록을 지울 수 있어 실행하지 않는다.
 }
